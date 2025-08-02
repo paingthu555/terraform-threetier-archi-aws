@@ -1,18 +1,11 @@
-variable "ec2_instance_type" {
-    description = "Instance type"
-    type = string
-    default = "t2.micro"
-}
-
-
-variable "web_subnet" {
-  type = list(string)
-}
+variable "ec2_instance_type" {}
+variable "bastion_subnet" {}
+variable "bastion_sg" {}
+variable "web_subnet" {}
+variable "app_subnet" {}
 variable "web_sg" {}
+variable "app_sg" {}
 variable "ssh_key" {}
 variable "key_name" {}
-variable "lb_tg_arn" {
-  description = "The ARN of the load balancer target group"
-  type        = string
-  }
+variable "lb_tg_arn" {}
 

@@ -15,46 +15,87 @@ resource "local_file" "ssh_key" {
   file_permission = "0400"
 }
 
-
-# Create launch template and asg for web tier
-
-resource "aws_launch_template" "terra_pt_web" {
-  name_prefix            = "terra_pt_web"
+# Create bastion host
+resource "aws_instance" "terra-pt-bastion" {
+  ami                    = data.aws_ami.amazonlnx.id
   instance_type          = var.ec2_instance_type
-  image_id               = data.aws_ami.amazonlnx.id
-  # vpc_security_group_ids = [var.web_sg]
   key_name               = var.key_name
-  user_data              = filebase64("${path.module}/web.sh")
+  subnet_id              = var.bastion_subnet[0]
+  vpc_security_group_ids = [var.bastion_sg]
+  associate_public_ip_address = true
 
-  network_interfaces {
-    security_groups = [var.web_sg]
-    associate_public_ip_address = true
-  }
-
-  tag_specifications {
-    resource_type = "instance"
-    tags = {
-      Name = "terra_pt_web-${"aws:instance-id"}"
-    }
+  tags = {
+    Name = "terra-pt-bastion"
   }
 }
 
-resource "aws_autoscaling_group" "terra_pt_web_asg" {
-  name                = "terra_pt_web_asg"
+# Create launch template and asg for web tier
+
+resource "aws_launch_template" "terra-pt-web" {
+  name_prefix            = "terra-pt-web"
+  instance_type          = var.ec2_instance_type
+  vpc_security_group_ids = [var.web_sg]
+  image_id               = data.aws_ami.amazonlnx.id
+  key_name               = var.key_name
+  user_data              = filebase64("${path.module}/web.sh")
+
+  tags = {
+    Name = "terra-pt-web"
+  }
+
+}
+
+resource "aws_autoscaling_group" "terra-pt-web-asg" {
+  name                = "terra-pt-web-asg"
   vpc_zone_identifier = var.web_subnet
   min_size            = 1
   max_size            = 2
-  desired_capacity    = 2
+  desired_capacity    = 1
   target_group_arns = [var.lb_tg_arn]
 
   launch_template {
-    id      = aws_launch_template.terra_pt_web.id
+    id      = aws_launch_template.terra-pt-web.id
     version = "$Latest"
   }
 
   tag {
     key                 = "Name"
-    value               = "terra_pt_web"
+    value               = "terra-pt-web"
+    propagate_at_launch = true
+  }
+}
+
+# Create template and asg for app tier
+
+resource "aws_launch_template" "terra-pt-app" {
+  name_prefix            = "terra-pt-app"
+  instance_type          = var.ec2_instance_type
+  vpc_security_group_ids = [var.app_sg]
+  image_id               = data.aws_ami.amazonlnx.id
+  key_name               = var.key_name
+  user_data              = filebase64("${path.module}/app.sh")
+
+  tags = {
+    Name = "terra-pt-app"
+  }
+
+}
+
+resource "aws_autoscaling_group" "terra-pt-app-asg" {
+  name                = "terra-pt-app-asg"
+  vpc_zone_identifier = var.app_subnet
+  min_size            = 1
+  max_size            = 2
+  desired_capacity    = 1
+
+  launch_template {
+    id      = aws_launch_template.terra-pt-app.id
+    version = "$Latest"
+  }
+
+  tag {
+    key                 = "Name"
+    value               = "terra-pt-app"
     propagate_at_launch = true
   }
 }
