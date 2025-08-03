@@ -38,7 +38,7 @@ module "database" {
 module "lb" {
   source            = "./module/lb"
   lb_sg             = module.network.terra_lb_sg
-  lb_subnet         = module.network.vpc_web_subnet
+  lb_subnet         = module.network.vpc_pub_subnet
   tg_port           = 80
   tg_protocol       = "HTTP"
   vpc_id            = module.network.vpc_id

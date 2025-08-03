@@ -48,9 +48,9 @@ resource "aws_launch_template" "terra-pt-web" {
 resource "aws_autoscaling_group" "terra-pt-web-asg" {
   name                = "terra-pt-web-asg"
   vpc_zone_identifier = var.web_subnet
-  min_size            = 1
-  max_size            = 2
-  desired_capacity    = 1
+  min_size            = 2
+  max_size            = 3
+  desired_capacity    = 2
   target_group_arns = [var.lb_tg_arn]
 
   launch_template {
@@ -84,9 +84,9 @@ resource "aws_launch_template" "terra-pt-app" {
 resource "aws_autoscaling_group" "terra-pt-app-asg" {
   name                = "terra-pt-app-asg"
   vpc_zone_identifier = var.app_subnet
-  min_size            = 1
-  max_size            = 2
-  desired_capacity    = 1
+  min_size            = 2
+  max_size            = 3
+  desired_capacity    = 2
 
   launch_template {
     id      = aws_launch_template.terra-pt-app.id

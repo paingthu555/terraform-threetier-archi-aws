@@ -60,7 +60,7 @@ resource "aws_eip" "terra-nat-eip" {
 
 resource "aws_nat_gateway" "terra-ngw" {
   allocation_id     = aws_eip.terra-nat-eip.id
-  subnet_id         = aws_subnet.terra-pub-subnet[0].id
+  subnet_id         = aws_subnet.terra-pub-subnet[1].id
 }
 
 # Create private subnet for app tier

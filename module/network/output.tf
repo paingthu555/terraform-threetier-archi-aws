@@ -10,6 +10,10 @@ output "vpc_bastion_subnet" {
     value = aws_subnet.terra-pub-subnet.*.id
 }
 
+output "vpc_pub_subnet" {
+  value = aws_subnet.terra-pub-subnet.*.id
+}
+
 output "vpc_web_sg" {
     value = aws_security_group.terra-frontend-web-sg.id
 }
