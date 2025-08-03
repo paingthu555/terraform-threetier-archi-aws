@@ -1,5 +1,9 @@
 # Three tier architecture on AWS using Terraform
 
+## Project diagram
+
+![diagram](./images/3%20tier%20architecture%20using%20terraform.jpg)
+
 ## Prerequisites
 - AWS IAM account with root privileges.
 - Need to installed terraform on your local pc.
