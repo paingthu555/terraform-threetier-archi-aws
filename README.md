@@ -49,7 +49,7 @@ aws configure
 ```
 3. Clone this repo
 ```
-https://github.com/paingthu555/terraform-threetier-archi-aws.git
+git clone https://github.com/paingthu555/terraform-threetier-archi-aws.git
 ```
 4. Change to the project directory
 ```
@@ -83,9 +83,14 @@ terraform destroy --auto-approved
 
 ## Confirm the infrastructure
 ![ec2](./images/threetier%20ec2.png)
+
 ![template](./images/template.png)
+
 ![vpc](./images/threetier%20vpc.png)
+
 ![lb](./images/LB.png)
+
 ![db](./images/rds_db.png)
+
 ![browser](./images/browser.png)
 
